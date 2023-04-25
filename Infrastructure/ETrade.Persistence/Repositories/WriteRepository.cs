@@ -1,4 +1,5 @@
 ﻿using ETrade.Application.Repositories;
+using ETrade.Domain.Entities.Common;
 using ETrade.Persistence.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace ETrade.Persistence.Repositories
 {
-	public class WriteRepository<T> : IWriteRepository<T> where T : class
+	public class WriteRepository<T> : IWriteRepository<T> where T : BaseEntity
 	{
 		private readonly AppDbContext _context;
 
@@ -47,7 +48,7 @@ namespace ETrade.Persistence.Repositories
 
 		public async Task<bool> RemoveAsync(string id)
 		{
-			T model = await Table.FindAsync(id);
+			T model = await Table.FirstOrDefaultAsync(data => data.Id == Guid.Parse(id));
 			return Remove(model);  //it is our created Remove() method above
 		}
 
